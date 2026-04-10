@@ -1,0 +1,105 @@
+# =============================================================================
+# Thaleia Containerfile - Multi-stage Build
+# =============================================================================
+#
+# Stages:
+#   1. builder     - Dev environment: Rust, all deps, OpenCode, dev tools
+#   2. production - Minimal runtime: Binaries + runtime deps only
+#
+# Build Commands:
+#   podman build --target builder     -t thaleia:builder -f Containerfile.dev .
+#   podman build --target production  -t thaleia:prod    -f Containerfile.dev .
+#
+# Development (runs inside thaleia:builder):
+#   make build    - cargo build --release
+#   make test     - cargo test
+#   make shell    - Interactive shell
+#   make test-mcp - Test MCP server
+#
+# Production:
+#   make build-prod - Build production image
+#   make run-prod   - Run production container
+#
+# =============================================================================
+
+# =============================================================================
+# Stage 1: Builder - Full development environment
+# =============================================================================
+FROM debian:trixie-slim AS builder
+
+# Install all system dependencies in one layer
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential pkg-config git curl ca-certificates cmake ninja-build \
+    libssl-dev libasound2-dev libasound2-plugins libsndfile1-dev \
+    llvm-dev libclang-dev espeak-ng libpulse-dev pulseaudio-utils \
+    libsdl2-dev pipewire-audio-client-libraries alsa-utils ffmpeg \
+    python3 python3-numpy libprotobuf-dev protobuf-compiler zlib1g-dev \
+    nodejs npm jq vim git strace htop procps wget \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Install Rust
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y \
+    && . "$HOME/.cargo/env" \
+    && rustup component add clippy rustfmt
+
+# Install OpenCode CLI
+RUN npm install -g opencode-ai
+
+# Environment variables
+ENV PATH="/root/.cargo/bin:/root/.npm-global/bin:$PATH"
+ENV PIPER_ESPEAKNG_DATA_DIRECTORY=/usr/lib/x86_64-linux-gnu/espeak-ng-data
+ENV ESPEEAKNG_DATA_DIR=/usr/lib/x86_64-linux-gnu/espeak-ng-data
+ENV SDL_AUDIODRIVER=pulse
+ENV PULSEaudio=auto
+ENV PA_AUTOCONNECT_TIMEOUT=5000
+ENV XDG_RUNTIME_DIR=/run/user/1000
+ENV PULSE_SERVER=unix:/run/user/1000/pulse/native
+
+# Create devuser (uid 1000) for development
+RUN useradd -m -u 1000 -G audio -s /bin/bash devuser \
+    && mkdir -p /home/devuser/.cache/{k,whisper,ort.pyke.io} \
+            /home/devuser/.config/pulse \
+    && chown -R devuser:devuser /home/devuser && \
+    cp -r /root/.cargo /home/devuser/.cargo && \
+    cp -r /root/.rustup /home/devuser/.rustup && \
+    chown -R devuser:devuser /home/devuser/.cargo /home/devuser/.rustup && \
+    rustup default stable
+
+ENV PATH="/home/devuser/.cargo/bin:/home/devuser/.npm-global/bin:$PATH"
+WORKDIR /home/devuser/workspace
+USER devuser
+
+# Default: run test script (can be overridden)
+CMD ["thaleia-test"]
+
+# =============================================================================
+# Stage 2: Production - Minimal runtime
+# =============================================================================
+FROM debian:trixie-slim AS production
+
+# Runtime dependencies only
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libasound2 libasound2-plugins libsndfile1 libpulse0 pulseaudio-utils \
+    libsdl2-2.0-0 espeak-ng libespeak1 ca-certificates curl \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Copy binaries from builder
+COPY --from=builder /usr/lib/x86_64-linux-gnu/espeak-ng-data /usr/lib/x86_64-linux-gnu/espeak-ng-data
+COPY --from=builder /root/.cargo/bin /root/.cargo/bin
+COPY --from=builder /root/.cargo/env /root/.cargo/env
+
+# Create devuser (uid 1000)
+RUN useradd -m -u 1000 -G audio -s /bin/bash devuser \
+    && mkdir -p /home/devuser/.cache/{k,whisper} /home/devuser/.config/pulse \
+    && chown -R devuser:devuser /home/devuser \
+    && chmod +x /usr/local/bin/thaleia* 2>/dev/null || true \
+    && echo 'pcm.!default { type pulse } ctl.!default { type pulse }' > /etc/asound.conf
+
+ENV PATH="/root/.cargo/bin:$PATH"
+ENV USER=devuser HOME=/home/devuser
+ENV SDL_AUDIODRIVER=pulse ESPEEAKNG_DATA_DIR=/usr/lib/x86_64-linux-gnu/espeak-ng-data
+
+WORKDIR /home/devuser
+USER devuser
+
+CMD ["thaleia", "--help"]

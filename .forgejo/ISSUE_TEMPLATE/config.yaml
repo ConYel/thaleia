@@ -1,0 +1,30 @@
+---
+name: Configuration Issue
+about: Report problems with configuration or setup
+title: "[Config] "
+labels: config
+projects: []
+assignees: []
+
+---
+
+## Description
+<!-- A clear and concise description of the configuration issue -->
+
+## What You Tried
+<!-- What configuration changes have you attempted? -->
+
+## Expected Behavior
+<!-- What should happen when configured correctly -->
+
+## Actual Behavior
+<!-- What happens instead -->
+
+## Configuration File
+<!-- Paste relevant config (remove secrets) -->
+```toml
+# your config here
+```
+
+## Additional Context
+<!-- Add any other context here -->

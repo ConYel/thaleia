@@ -1,0 +1,27 @@
+# Codeberg Pages Configuration
+# https://codeberg.org/pages/help
+
+name: Thaleia
+owner: ConYel
+repo: thaleia
+
+# Branch to serve from
+branch: main
+
+# Path in repository (default: /)
+pages:
+  - path: /docs
+    title: Thaleia - Voice AI
+    description: Open-source voice AI system
+
+# Build settings (optional)
+build:
+  # Use static generator
+  static: true
+  
+  # Fenced code block language labels  
+  highlight:
+    - rust
+    - bash
+    - json
+    - toml

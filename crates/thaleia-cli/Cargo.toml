@@ -1,0 +1,38 @@
+[package]
+name = "thaleia-cli"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+
+[[bin]]
+name = "thaleia"
+path = "src/main.rs"
+
+[features]
+default = ["kokoro", "playback", "whisper", "mcp"]
+kokoro = ["thaleia-core/kokoro"]
+# Enable audio playback and capture
+playback = ["thaleia-core/playback-capture"]
+# Also enable rodio and sdl2 backends explicitly
+rodio = ["thaleia-core/rodio"]
+sdl2 = ["thaleia-core/sdl2-audio"]
+# Alias for backwards compatibility
+playback-capture = ["playback"]
+# Enable speech-to-text with Whisper
+whisper = ["thaleia-core/whisper"]
+# Enable MCP server
+mcp = ["thaleia-mcp", "thaleia-core/whisper"]
+# Enable VAD (Voice Activity Detection)
+vad = ["thaleia-core/vad"]
+
+[dependencies]
+thaleia-core = { path = "../thaleia-core", features = ["kokoro", "playback-capture", "rodio", "sdl2-audio", "whisper"] }
+thaleia-mcp = { path = "../thaleia-mcp", optional = true }
+anyhow.workspace = true
+tokio.workspace = true
+tracing.workspace = true
+tracing-subscriber = "0.3"
+clap = { version = "4.5", features = ["derive"] }
+hound.workspace = true
+atty = "0.2"

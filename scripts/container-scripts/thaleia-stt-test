@@ -1,0 +1,16 @@
+#!/bin/bash
+# Thaleia STT Test - Quick speech-to-text test
+# Usage: thaleia-stt-test [TIMEOUT]
+# Default timeout: 5 seconds
+
+TIMEOUT="${1:-5}"
+
+if command -v thaleia &> /dev/null; then
+    echo "Testing STT - Listening for ${TIMEOUT} seconds..."
+    echo "Speak now!"
+    thaleia listen --timeout "$TIMEOUT"
+else
+    echo "Error: 'thaleia' command not found"
+    echo "Make sure Thaleia is installed in the container"
+    exit 1
+fi

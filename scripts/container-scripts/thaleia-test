@@ -1,0 +1,32 @@
+#!/bin/bash
+# Thaleia Test Suite - Main diagnostic script
+# Usage: thaleia-test
+
+echo "==========================================="
+echo "  Thaleia Test Suite v1.0"
+echo "==========================================="
+echo ""
+echo "Quick Tests:"
+echo "  thaleia-tts-test \"Hello\" - Test TTS synthesis"
+echo "  thaleia-stt-test 5       - Test STT (speak now!)"
+echo "  thaleia voices           - List available voices"
+echo "  thaleia-mcp --mode standard - Start MCP server"
+echo ""
+echo "Run 'thaleia --help' for full command list"
+echo ""
+echo "Audio Devices:"
+echo "------------------------------------------"
+
+# Show available audio sources (microphones)
+if command -v pactl &> /dev/null; then
+    echo "Input devices (microphones):"
+    pactl list short sources 2>/dev/null | grep -i "monitor\|source" | head -5 || echo "  (no input devices found)"
+    echo ""
+    echo "Output devices (speakers):"
+    pactl list short sinks 2>/dev/null | head -5 || echo "  (no output devices found)"
+else
+    echo "PulseAudio not available in container"
+fi
+
+echo ""
+echo "==========================================="

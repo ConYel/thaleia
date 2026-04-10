@@ -1,0 +1,87 @@
+[package]
+name = "thaleia-core"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+
+[dependencies]
+anyhow.workspace = true
+thiserror.workspace = true
+tokio.workspace = true
+tracing.workspace = true
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+ctor = "0.2"
+hound.workspace = true
+
+# cpal is needed for audio stream errors (rodio re-exported it < 0.22)
+cpal = { version = "0.15", optional = true }
+
+# SDL2 audio backend - for PulseAudio/Qubes systems
+sdl2 = { version = "0.35", optional = true }
+
+[features]
+default = []
+# Enable Kokoro TTS (requires OpenSSL dev libraries)
+kokoro = ["kokoro-tiny", "reqwest", "futures-util", "home"]
+# Enable Rodio audio backend (ALSA)
+rodio = ["rodio/playback", "rodio/recording", "cpal"]
+# Enable audio playback only
+playback = ["rodio/playback", "kokoro-tiny/playback", "sdl2"]
+# Enable audio playback AND capture (rodio handles both)
+playback-capture = ["playback", "rodio/playback", "rodio/recording", "kokoro-tiny/playback", "cpal", "sdl2"]
+# Enable Whisper STT
+whisper = ["whisper-rs", "rubato", "audioadapter-buffers", "reqwest", "futures-util", "home"]
+# Enable SDL2 audio backend (for Qubes/PulseAudio)
+sdl2-audio = ["sdl2"]
+# Enable VAD (Voice Activity Detection) - Using patched vad-rs with ONNX
+vad = ["vad-rs", "reqwest", "dirs"]
+
+[dependencies.kokoro-tiny]
+version = "0.2"
+optional = true
+default-features = false
+
+[dependencies.rodio]
+version = "0.22"
+optional = true
+default-features = false
+
+[dependencies.reqwest]
+version = "0.12"
+optional = true
+default-features = false
+features = ["stream", "rustls-tls-webpki-roots", "blocking"]
+
+[dependencies.futures-util]
+version = "0.3"
+optional = true
+default-features = false
+features = ["io"]
+
+[dependencies.home]
+version = "0.5"
+optional = true
+
+[dependencies.whisper-rs]
+version = "0.16"
+optional = true
+
+[dependencies.rubato]
+version = "1"
+optional = true
+
+[dependencies.audioadapter-buffers]
+version = "2"
+optional = true
+
+[dependencies.dirs]
+version = "5.0"
+optional = true
+
+[dependencies.vad-rs]
+version = "0.1"
+optional = true
+
+[dev-dependencies]
+tokio-test = "0.4"

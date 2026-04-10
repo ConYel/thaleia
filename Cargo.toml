@@ -1,0 +1,43 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/thaleia-core",
+    "crates/thaleia-cli",
+    "crates/thaleia-mcp",
+]
+
+# Use local modified kokoro-tiny with download progress support
+# Use patched vad-rs with compatible ONNX Runtime version
+[patch.crates-io]
+kokoro-tiny = { path = "kokoro-tiny" }
+vad-rs = { path = "patches/vad-rs" }
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+authors = ["Thaleia Project"]
+license = "AGPL-3.0-or-later"
+
+[workspace.dependencies]
+tokio = { version = "1.42", features = ["full"] }
+anyhow = "1.0"
+thiserror = "2.0"
+tracing = "0.1"
+serde = { version = "1.0", features = ["derive"] }
+config = "0.14"
+hound = "3.5"
+cpal = "0.15"
+rodio = "0.22"
+reqwest = { version = "0.12", default-features = false, features = ["stream", "rustls-tls-webpki-roots"] }
+rustls = { version = "0.23", default-features = false, features = ["ring", "std", "tls12"] }
+hyper-rustls = { version = "0.27", default-features = false, features = ["rustls-ring-compat"] }
+futures-util = { version = "0.3", default-features = false, features = ["io"] }
+home = "0.5"
+# Whisper STT dependencies
+whisper-rs = "0.16"
+rubato = "0.15"
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1

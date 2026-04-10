@@ -1,0 +1,15 @@
+#!/bin/bash
+# Thaleia TTS Test - Quick speech synthesis test
+# Usage: thaleia-tts-test [TEXT]
+# Default text: "Hello"
+
+TEXT="${1:-Hello}"
+
+if command -v thaleia &> /dev/null; then
+    echo "Testing TTS: \"$TEXT\""
+    thaleia speak "$TEXT"
+else
+    echo "Error: 'thaleia' command not found"
+    echo "Make sure Thaleia is installed in the container"
+    exit 1
+fi

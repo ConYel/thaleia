@@ -1,0 +1,53 @@
+[package]
+name = "thaleia-mcp"
+version.workspace = true
+edition.workspace = true
+description = "MCP server for Thaleia voice AI"
+license.workspace = true
+
+[[bin]]
+name = "thaleia-mcp"
+path = "src/main.rs"
+
+[dependencies]
+# MCP protocol - rmcp SDK (official) v1.3
+rmcp = { version = "1.3", features = [
+    "server",
+    "macros",
+    "transport-io",         # stdio transport
+    "transport-streamable-http-server",  # HTTP transport
+    "schemars",            # JSON Schema for tools
+] }
+
+# JSON Schema generation (must match rmcp's version)
+schemars = "1.0"
+
+# Serialization
+serde = { workspace = true }
+serde_json = "1.0"
+
+# Async runtime
+tokio = { workspace = true, features = ["sync", "rt", "macros", "io-std", "net"] }
+
+# Logging
+tracing = { workspace = true }
+tracing-subscriber = "0.3"
+ctor = "0.2"
+
+# Error handling
+anyhow = { workspace = true }
+thiserror = { workspace = true }
+
+# Audio
+hound = { workspace = true }
+rodio = { workspace = true }
+
+# Thaleia core
+thaleia-core = { path = "../thaleia-core", features = ["kokoro", "playback-capture", "whisper", "rodio", "sdl2-audio"] }
+
+[dev-dependencies]
+tokio-test = "0.4"
+
+[features]
+default = ["whisper"]
+whisper = ["thaleia-core/whisper"]

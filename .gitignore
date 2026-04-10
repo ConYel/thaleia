@@ -1,0 +1,31 @@
+# =============================================================================
+# Thaleia .gitignore - Files NOT to commit to version control
+# =============================================================================
+
+# Build artifacts
+/target/
+**/target/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Development/Debug files
+*.wav
+*.mp3
+test_*.sh
+debug-*.sh
+
+# Logs
+*.log
+
+# Runtime caches (downloaded at runtime)
+.cache/
+.config/
