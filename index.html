@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thaleia - The Joyful Voice AI</title>
+    <meta name="description" content="Open-source voice AI system that brings joy to human-AI interaction">
+    <style>
+        :root {
+            --coral: #FF6B6B;
+            --gold: #FFD93D;
+            --ivory: #FFFEF2;
+            --dark: #2D3436;
+            --mute: #636E72;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background: var(--ivory);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        .hero {
+            background: linear-gradient(135deg, var(--coral) 0%, var(--gold) 100%);
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+        .hero h1 {
+            font-size: 3rem;
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+        .hero .tagline {
+            font-size: 1.25rem;
+            color: rgba(255,255,255,0.9);
+        }
+        .warning {
+            background: #FFF3CD;
+            border: 1px solid #FFE69C;
+            padding: 1rem;
+            margin: 2rem auto;
+            max-width: 600px;
+            border-radius: 8px;
+        }
+        .warning strong { color: #856404; }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        .feature {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+        .feature h3 { color: var(--coral); margin-bottom: 0.5rem; }
+        .cta {
+            display: inline-block;
+            background: var(--coral);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            margin: 0.5rem;
+        }
+        .cta:hover { opacity: 0.9; }
+        .cta-secondary {
+            background: white;
+            color: var(--coral);
+            border: 2px solid var(--coral);
+        }
+        .links {
+            margin: 2rem 0;
+            text-align: center;
+        }
+        .links a {
+            color: var(--coral);
+            margin: 0 1rem;
+        }
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--mute);
+            font-size: 0.875rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="hero">
+        <h1>✨ Thaleia</h1>
+        <p class="tagline">The Joyful Voice AI Companion</p>
+    </div>
+
+    <div class="warning">
+        <strong>⚠️ Pre-Alpha</strong><br>
+        Thaleia is currently in pre-alpha testing. Use at your own risk. 
+        API may change between versions.
+    </div>
+
+    <div class="container">
+        <h2>What is Thaleia?</h2>
+        <p>Thaleia is an open-source voice AI system that brings joy to human-AI interaction. 
+        Named after the Greek Muse of comedy and idyllic poetry, Thaleia represents our belief 
+        that technology should make people <strong>smile</strong>.</p>
+
+        <div class="features">
+            <div class="feature">
+                <h3>🗣️ Speech-to-Text</h3>
+                <p>Whisper-powered transcription with high accuracy</p>
+            </div>
+            <div class="feature">
+                <h3>🔊 Text-to-Speech</h3>
+                <p>Kokoro-82M for natural, fast speech synthesis</p>
+            </div>
+            <div class="feature">
+                <h3>🔌 MCP Server</h3>
+                <p>Connect to Claude, Cursor, any MCP client</p>
+            </div>
+        </div>
+
+        <h2>Quick Start</h2>
+        <pre style="background:#2D3436;color:#fff;padding:1rem;border-radius:6px;overflow-x:auto;">cargo install thaleia
+thaleia speak "Hello! I'm Thaleia!"</pre>
+
+        <div class="links">
+            <a href="https://codeberg.org/ConYel/thaleia">📦 Source Code</a>
+            <a href="https://codeberg.org/ConYel/thaleia/issues">🐛 Report Issue</a>
+            <a href="https://codeberg.org/ConYel/thaleia/wiki">📖 Documentation</a>
+        </div>
+
+        <div style="text-align:center;margin:2rem 0;">
+            <a href="https://codeberg.org/ConYel/thaleia" class="cta">Get Started</a>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>Thaleia &copy; 2026 &mdash; Dual License: AGPL v3 + Commercial</p>
+        <p>Built with LLM agent assistance</p>
+    </div>
+</body>
+</html>
