@@ -6,7 +6,7 @@ owner: ConYel
 repo: thaleia
 
 # Branch to serve from
-branch: main
+branch: master
 
 # Path in repository (default: /)
 pages:
